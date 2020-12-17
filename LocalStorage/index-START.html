@@ -35,7 +35,6 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-
   const items = JSON.parse(localStorage.getItem('items')) || []; // fetch data from localstorage or else start with empty array
 
 
@@ -47,12 +46,10 @@ const text = (this.querySelector('[name=item]')).value; //select the name attrib
     text,  //elem name
     status: false //status of elem whehter checked or not 
   };
+
   items.push(item); // push the input data into the items array 
   popList(items, itemsList); 
-
-
   localStorage.setItem('items', JSON.stringify(items)); // begin storing data in local storage 
-
   this.reset(); // clear the input box after submitting data
 }
 
@@ -62,23 +59,27 @@ function popList(items = [], itemsList){ // pass in the items array and the list
   itemsList.innerHTML = items.map((item, i) => {  // map each elem and its index and append it on the html
     return `
       <li> 
-        <input type="checkbox" data-index=${i} id="item${i}" ${item.status ? 'checked' : ''}/>
-        <label for="item${i}">${item.text}</label>
+        <input type="checkbox" data-index=${i} id="item ${i}" ${item.status ? 'checked' : ''}/>
+        <label for="item ${i}">${item.text}</label>
       </li>
       `;
   }).join(''); // combine the elements into one long str
 }
 
-
+// function used to toggle the checkbox and reflect changes in localstorage
 function toggleDone(e){
+  if(!e.target.matches('input')) return; // only continue if the input box is clicked 
+  const el = e.target;  // narrow scope of event
+  const index = el.dataset.index; // grab the index value we set in popList
+  items[index].status = !items[index].status; // chnage the true/false value
+  localStorage.setItem('items', JSON.stringify(items)); // begin storing data in local storage 
+  popList(items, itemsList);  // visually populate the list
 
-
-  
 }
 
-popList(items, itemsList);
-
 addItems.addEventListener('submit', addItem); // when loking for submit event we cover all forms of submitting any data
+itemsList.addEventListener('click', toggleDone); // we'll use this to add functionality for the checkbox
+popList(items, itemsList);
 
 </script>
 
