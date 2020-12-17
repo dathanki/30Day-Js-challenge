@@ -1,0 +1,87 @@
+<!-- 
+    Name: Dhaval Thanki
+    Date: 14/Aug/2020
+    Title: HTML Canvas in js
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+const canvas = document.querySelector('#draw'); // anchor point
+const ctx = canvas.getContext('2d');  // getting the canvas context area which will eventually be drawn on
+
+/* used to resize height and width to page H/W values */
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+ctx.strokeStyle  = '#BADA55';
+ctx.lineJoin = 'round'; // stylize how end of line when joined with another will be (round, square, etc) 
+ctx.lineCap = 'round';  // stylize how end of line cap will be
+ctx.lineWidth = 100;  // set width of the line being drawn
+// ctx.globalCompositeOperation = 'multiply';   // used to mimic multiply image mask in photoshop by multiplying multi-layered colours on single spot
+
+let isDrawing = false; // flag used to tell whether drawing is intended
+
+let lastX = 0;  // coordinates for start and end of lines drawn
+let lastY = 0;
+let hue = 0; // hue value is 0 or red to begin with (using hsl)
+let direction = true; 
+
+
+function draw(e){
+  if (!isDrawing) return; // stop the fn from running when they are not moused down
+console.log(e);
+console.log({isDrawing});
+
+ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; // use hsl to set value of hue
+ctx.beginPath();  // start a new path
+ctx.moveTo(lastX, lastY);   // start at this location
+ctx.lineTo(e.offsetX, e.offsetY); // end at this location - the last position the user places their mouse (clicked down)
+ctx.stroke();
+
+[lastX, lastY] = [e.offsetX, e.offsetY]; // es6 method of assigning more than 1 var at a time
+
+  hue++; // increment the hue in hsl from 0 to 360 (red to red) to showcase 'rainbow effect'
+  if (hue >= 360) {
+    hue = 0;
+  }
+
+  if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) { // bounds for line width
+    direction = !direction; // "flip" the var direction to 'false'
+  }
+  if (direction) {  // if direction is true, increment line width 
+    ctx.lineWidth++;  // increment linewidth by 1
+  } else {  // else if direction is false (violated bounds of first if statement), decrement line width 
+    ctx.lineWidth--;  // decrement linewidth by 1
+  }
+}
+
+
+canvas.addEventListener('mousedown', (e) => {
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY]; // es6 method of assigning more than 1 var at a time
+});
+
+
+canvas.addEventListener('mousemove', draw);
+/* additional event listeners with arrow functions to trigger/reset the flag isDrawing */
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>

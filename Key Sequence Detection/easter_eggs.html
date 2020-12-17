@@ -1,0 +1,42 @@
+<!-- 
+    Name: Dhaval Thanki
+    Date: 17/Aug/2020
+    Title: listening for special string in js
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+
+<script>
+
+
+
+const pressed = []; // empty array to store all values entered
+const secretCode = 'moo';
+
+
+  window.addEventListener('keyup', (e) => {
+    pressed.push(e.key); // append the keys pressed
+
+/* we need to keep the array only the length of the code */
+    /* determine length needed from the end of the array (-1 to offset index 0) then remove excess */
+    pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length); // pressed.length - secretCode.length is redundant stuff we will remove
+    
+    
+    if (pressed.join('').includes(secretCode)) { // use join to make it equatable to the string var we set
+      console.log('That is the Code');
+      cornify_add();  // magic
+    }
+    console.log(pressed);
+  })
+
+</script>
+
+</body>
+</html>

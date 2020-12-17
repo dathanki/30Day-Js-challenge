@@ -1,0 +1,74 @@
+<!-- 
+    Name: Dhaval Thanki
+    Date: 10/Aug/2020
+    Title: Ajax Type ahead
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+const endpoint_2 = 'https://raw.githubusercontent.com/rancheta/countryRegionCityJSON/master/country_city_data/Canada.json';
+
+const cities = [];
+
+fetch(endpoint)
+.then(raw_data => raw_data.json())  // conv raw data into json data
+.then(data => cities.push(...data)) // '...data' used to make sure the data array is not nested in cities array
+
+function findMatches(wordToMatch, cities) {   // grab whole array
+    return cities.filter(place => {     // filter by what user enters in search
+      const regex = new RegExp(wordToMatch, 'gi');  // 'g' for searching all data 'i' for both upper and lower case vals
+      return place.city.match(regex) || place.state.match(regex); // match either city name or state name
+    });
+}
+
+
+function numberWithCommas(x) {  // add commas to the pop value
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
+function displayresults(){
+  const matchArray = findMatches(this.value, cities); // use user-input and send to findMatches function to sort and filter
+  const html = matchArray.map(place => {
+    const regex = new RegExp(this.value, 'gi');  // find what user typed in regex
+
+        // this is used to replace matching characters (city/statename, population) with a stylized version of the same content
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return ` 
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class = "population">${numberWithCommas(place.population)}</span> 
+        </li>
+        `;
+     }).join(''); // convert array into simple string
+suggestions.innerHTML = html;
+}
+const searchInput = document.querySelector('.search');  // log what is within searchbar text box
+const suggestions = document.querySelector('.suggestions'); // used to dynamically display results
+
+searchInput.addEventListener('change', displayresults); // both are used to send
+searchInput.addEventListener('keyup', displayresults);  // values to function displayResults
+
+
+
+</script>
+</body>
+</html>

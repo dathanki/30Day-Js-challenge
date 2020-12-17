@@ -1,0 +1,116 @@
+<!-- 
+    Name: Dhaval Thanki
+    Date: 15/Aug/2020
+    Title: using dev tools in js
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p> <!--vrun function upon click on paragraph-->
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+
+    console.log('test_var_one');
+
+    // Interpolated
+
+    console.log('generic method:', 'connect the', 'strings'); // generic method to interpolate
+      var start = 'es6 method: ';
+      var string = 'strings';
+    console.log(`${start}connect the${string}`); // es6 backticks method to interpolate
+
+    // Styled
+
+    console.log('%c I am some stylized dummy text.', // adding %c then common css styling method will style the text
+    'font-size:22px; background:navy; text-shadow: 5px 3px 0 blue');
+
+    // warning!
+
+    console.warn('things may begin to get crazy now '); // show warning text + stack trace
+
+    // Error :|
+
+    console.error('lil bit of an error going on here'); // show error text + stack trace
+
+
+    // Info
+
+    var starter_text = 'console.info demo:';
+    console.info(`${starter_text} red pill or the blue pill?`); // show info text
+
+    // Testing
+
+    console.assert(1 === 5, 'this is incorrect'); // console.assert will only fire for a flase, no change/fire implies true
+    const p = document.querySelector('p');
+
+    console.assert(p.classList.contains('ouch'), // check if classlist 'p' contains the value 'ouch'
+            'you didn`t select the correct element.');  // return only if FALSE (i.e it is triggered)
+
+
+    // clearing
+
+    console.clear(); // clear the console
+
+    // Viewing DOM Elements
+
+    console.log(p); // view elements
+    console.dir(p); // view all elements within 'p' with in-depth detail
+
+    // Grouping together
+
+    dogs.forEach( dog => {  // arrow function to say what to do for each value in dogs array
+      
+      console.group(`${dog.name}`); // start of grouping param
+      // console.groupCollapsed(`${dog.name}`); // neater looking variant
+
+     /* what will be wihtin group of each element */ 
+        console.log(`This is ${dog.name}`); // statement that will be triggered for each element 
+        console.log(`${dog.name} is ${dog.age} human years old`); // statement that will be triggered for each element 
+        console.log(`${dog.name} is ${dog.age * 7} in dog years`); // statement that will be triggered for each element 
+        
+      console.groupEnd(`${dog.name}`);  // end of grouping param
+
+    });
+
+
+    // counting
+
+    console.count('item');  // counts how many times each element is used, respective to the element
+    console.count('item');
+    console.count('item');
+    console.count('item');
+
+
+    // timing
+
+    console.time('fetching data'); // used to time things
+
+    /* eg fetch data from github repo */
+
+    fetch('https://api.github.com/users/idouvie') // source
+    .then(data => data.json())  // convert ot json type to be able to read
+    .then(data => { 
+    console.timeEnd('fetching data'); // end of console.time block
+    });
+
+    console.table(dogs); // bonus table
+
+
+  </script>
+</body>
+</html>
